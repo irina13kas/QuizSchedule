@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Application.DTOs.Points
+{
+    public class PointsHistoryItemDTO
+    {
+        public Guid Id { get; set; }
+        public Guid QuizemanId { get; set; }
+        public string QuizemanName { get; set; } = string.Empty;
+        public Guid AdminId { get; set; }
+        public string AdminName { get; set; } = string.Empty;
+        public int Amount { get; set; }
+        public string Comment { get; set; } = string.Empty;
+        public Guid GameId { get; set; }
+        public string GameName { get; set;} = string.Empty;
+        // дата за которую начислили баллы
+        public DateTime CreatedAt { get; set; }
+    }
+}

@@ -1,0 +1,22 @@
+﻿namespace Application.DTOs.Games
+{
+    public class GameResponse
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public Guid ResponsibleAdminId { get; set; }
+        public string ResponsibleAdminName { get; set; } = string.Empty;
+        public Guid BarId { get; set; }
+        public string BarName { get; set; } = string.Empty;
+        public string? Partner { get; set; }
+        public DateTime GameStartTime { get; set; }
+        public DateTime WorkStartTime { get; set; }
+        public Guid MasterId {get; set;}
+        public string MasterName { get; set; } = string.Empty;
+        public Guid DjId { get; private set; }
+        public string DjName { get; set; } = string.Empty;
+        public Guid PhotographerId { get; private set; }
+        public string PhotographerName { get; set; } = string.Empty;
+    }
+}
