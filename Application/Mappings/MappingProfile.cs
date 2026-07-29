@@ -8,14 +8,8 @@ using Application.DTOs.Photographers;
 using Application.DTOs.Points;
 using Application.DTOs.Quizman;
 using Application.DTOs.Replacements;
-using Application.DTOs.Schedule;
 using AutoMapper;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Mappings
 {
