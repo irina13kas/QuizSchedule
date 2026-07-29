@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<List<Smart>> GetAvailableDatesForQuizmanByStatusAsync(
+        public async Task<List<Smart>> GetSmartDatesForQuizmanByStatusAsync(
             Guid quizemanId,
             SmartStatus? status,
             DateTime? dateFrom,

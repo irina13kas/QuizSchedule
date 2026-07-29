@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.Games;
-using Application.DTOs.Stat;
 using MediatR;
 using System;
 using System.Collections.Generic;

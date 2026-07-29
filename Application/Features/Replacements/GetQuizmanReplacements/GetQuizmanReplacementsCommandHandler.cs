@@ -27,6 +27,7 @@ namespace Application.Features.Replacements.GetQuizmanReplacements
             _replacementRepository = replacementRepository;
             _currentUserService = currentUserService;
             _quizmanRepository = quizmanRepository;
+            _mapper = mapper;
         }
 
         public async Task<GetReplacementsResponse> Handle(GetQuizmanReplacementsCommand request,

@@ -12,8 +12,6 @@ namespace Application.Features.SmartSchedule.AddToSmart
     {
         public AddToSmartCommandValidator()
         {
-            RuleFor(x => x.QuizmanId)
-                .NotEmpty().WithMessage("Id Квизмена обязателен");
 
             RuleFor(x => x.Date)
                 .LessThanOrEqualTo(DateTime.Today).WithMessage("Нельзя менять Smart на прошедшую дату");

@@ -19,8 +19,11 @@ namespace Application.Features.Games.CancelGame
         private readonly IGameRepository _gameRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IGameParticipantRepository _participantRepository;
+        private readonly IAdminRepository _adminRepository;
 
-        public CancelGameCommandHandler(ICurrentUserService currentUserService,
+        public CancelGameCommandHandler(
+            IAdminRepository adminRepository,
+            ICurrentUserService currentUserService,
             IUnitOfWork unitOfWork, IGameRepository gameRepository,
             INotificationRepository notificationRepository, 
             IGameParticipantRepository participantRepository)
@@ -30,6 +33,7 @@ namespace Application.Features.Games.CancelGame
             _gameRepository = gameRepository;
             _notificationRepository = notificationRepository;
             _participantRepository = participantRepository;
+            _adminRepository = adminRepository;
         }
 
         public async Task<GameChangeStateResponse> Handle(CancelGameCommand request, CancellationToken cancellationToken)
@@ -41,6 +45,11 @@ namespace Application.Features.Games.CancelGame
 
             if (game == null)
                 throw new NotFoundException("Игра не найдена");
+            var userId = _currentUserService.UserId ?? throw new UnauthorizedException();
+
+            var admin = await _adminRepository.GetByUserIdAsync(userId, cancellationToken);
+            if (admin == null)
+                throw new NotFoundException("Админа не существует");
 
             if (game.Status == GameStatus.Cancelled)
                 throw new NotBusinessSuitableException("Нельзя отменить уже отмененную игру");
@@ -58,7 +67,7 @@ namespace Application.Features.Games.CancelGame
             //_participantRepository.DeleteAllParticipantsFromGame(game.Id, cancellationToken);
 
             game.Cancel();
-            await NotifyParticipantsAsync(game, request.Reason, cancellationToken);
+            await NotifyParticipantsAsync(admin.Id, game, request.Reason, cancellationToken);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -69,6 +78,7 @@ namespace Application.Features.Games.CancelGame
         }
 
         private async Task NotifyParticipantsAsync(
+            Guid adminId,
             Game game,
             string reason,
             CancellationToken cancellationToken)
@@ -82,7 +92,7 @@ namespace Application.Features.Games.CancelGame
                       $"Причина: {reason}";
 
             foreach(var p in game.Participants){
-                var notification = new Notification(p.Id, message,title, NotificationType.GameCancelled);
+                var notification = new Notification(p.Id, adminId, message,title, NotificationType.GameCancelled);
                 await _notificationRepository.AddAsync(notification, cancellationToken);
             }
         }

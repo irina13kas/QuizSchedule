@@ -16,17 +16,20 @@ namespace Application.Features.Games.DeleteGame
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IGameRepository _gameRepository;
+        private readonly IAdminRepository _adminRepository;
         private readonly INotificationRepository _notificationRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public DeleteGameCommandHandler(ICurrentUserService currentUserService,
             IGameRepository gameRepository,
             INotificationRepository notificationRepository,   
+            IAdminRepository adminRepository,
             IUnitOfWork unitOfWork)
         {
             _currentUserService = currentUserService;
             _gameRepository = gameRepository;
             _notificationRepository = notificationRepository;
+            _adminRepository = adminRepository;
             _unitOfWork = unitOfWork;
         }
 
@@ -39,8 +42,14 @@ namespace Application.Features.Games.DeleteGame
             if (game == null)
                 throw new NotFoundException("Игры с таким Id не существует");
 
+            var userId = _currentUserService.UserId ?? throw new UnauthorizedException();
+
+            var admin = await _adminRepository.GetByUserIdAsync(userId, cancellationToken);
+            if (admin == null)
+                throw new NotFoundException("Админ не существует");
+
             _gameRepository.Remove(game);
-            await NotifyParticipantsAsync(game, cancellationToken);
+            await NotifyParticipantsAsync(admin.Id, game, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return new GameChangeStateResponse
@@ -50,6 +59,7 @@ namespace Application.Features.Games.DeleteGame
         }
 
         private async Task NotifyParticipantsAsync(
+            Guid adminId,
             Game game,
             CancellationToken cancellationToken)
         {
@@ -62,7 +72,7 @@ namespace Application.Features.Games.DeleteGame
 
             foreach (var p in game.Participants)
             {
-                var notification = new Notification(p.Id, message, title, NotificationType.GameCancelled);
+                var notification = new Notification(p.Id, adminId, message, title, NotificationType.GameCancelled);
                 await _notificationRepository.AddAsync(notification, cancellationToken);
             }
         }

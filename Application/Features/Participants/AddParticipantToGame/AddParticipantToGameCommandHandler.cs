@@ -25,16 +25,21 @@ namespace Application.Features.Participants.AddParticipantToGame
         private readonly IGameRepository _gameRepository;
         private readonly IMapper _mapper;
 
-        public AddParticipantToGameCommandHandler(ICurrentUserService currentUserService, 
+        public AddParticipantToGameCommandHandler(
+            ICurrentUserService currentUserService, 
             IUnitOfWork unitOfWork, 
             IGameParticipantRepository participantRepository, 
             IGameRepository gameRepository,
+            ISmartRepository smart,
+            IQuizmanRepository quizmanRepository,
             IMapper mapper)
         {
             _currentUserService = currentUserService;
             _unitOfWork = unitOfWork;
             _participantRepository = participantRepository;
             _gameRepository = gameRepository;
+            _quizmanRepository = quizmanRepository;
+            _smart = smart;
             _mapper = mapper;
 
         }

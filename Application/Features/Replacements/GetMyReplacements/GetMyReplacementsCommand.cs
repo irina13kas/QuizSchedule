@@ -1,5 +1,4 @@
 ﻿using Application.DTOs.Replacements;
-using Application.DTOs.ReplacementsSchedule;
 using MediatR;
 using System;
 using System.Collections.Generic;

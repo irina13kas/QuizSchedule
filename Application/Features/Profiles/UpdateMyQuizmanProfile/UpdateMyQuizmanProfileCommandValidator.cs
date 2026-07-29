@@ -11,9 +11,6 @@ namespace Application.Features.Profiles.UpdateMyProfile
     {
         public UpdateMyQuizmanProfileCommandValidator()
         {
-            RuleFor(x => x.QuizmanId)
-                .NotEmpty().WithMessage("Id Квизмена обязателен");
-
             RuleFor(x => x.BirthDay)
                 .LessThan(x => DateTime.Today)
                 .When(x => x.BirthDay.HasValue);
