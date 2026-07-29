@@ -40,5 +40,22 @@ namespace Infrastructure.Services
 
         public bool IsAuthenticated =>
             _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+
+        public string? ClientIp
+        {
+            get
+            {
+                var httpContext = _httpContextAccessor.HttpContext;
+
+                if (httpContext == null) return null;
+
+                var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"]
+                    .FirstOrDefault();
+                if(!string.IsNullOrEmpty(forwardedFor))
+                    return forwardedFor.Split(',')[0].Trim();
+
+                return httpContext.Connection.RemoteIpAddress?.ToString();
+            }
+        }
     }
 }
