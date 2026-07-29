@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.ChangeParticipantRole
 {
-    public class ChangeParticipantRoleCommandHandler : IRequestHandler<ChangeParticipantRoleCommand, GameResponseForParticipants>
+    public class ChangeParticipantRoleCommandHandler : IRequestHandler<ChangeParticipantRoleCommand,
+        GameWithParticipantsResponse>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
@@ -34,7 +35,8 @@ namespace Application.Features.Participants.ChangeParticipantRole
             _mapper = mapper;
         }
 
-        public async Task<GameResponseForParticipants> Handle(ChangeParticipantRoleCommand request, CancellationToken cancellationToken)
+        public async Task<GameWithParticipantsResponse> Handle(ChangeParticipantRoleCommand request,
+            CancellationToken cancellationToken)
         {
             if (_currentUserService.Role != UserRole.Admin.ToString())
                 throw new ForbiddenException("Только Админ может менять роль");
@@ -54,9 +56,9 @@ namespace Application.Features.Participants.ChangeParticipantRole
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 
                 var updateGame = await _gameRepository.GetByIdWithParticipantsAsync(participant.GameId, cancellationToken);
-                return _mapper.Map<GameResponseForParticipants>(updateGame);
+                return _mapper.Map<GameWithParticipantsResponse>(updateGame);
             }
-            return _mapper.Map<GameResponseForParticipants>(participant.Game);
+            return _mapper.Map<GameWithParticipantsResponse>(participant.Game);
 
         }
     }

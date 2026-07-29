@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Smart
 {
-    public class AvailableDaysForQuizmanResponse
+    public class SmartDaysForQuizmanResponse
     {
         public Guid QuizmanId { get; set; }
         public string QuizemanName { get; set; } = string.Empty;
-        public List<SmartItemResponse> AvailableDaysForQuizman { get; set; }
+        public List<SmartItemResponse> SmartDaysForQuizman { get; set; } = new();
     }
 }

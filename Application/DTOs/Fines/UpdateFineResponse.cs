@@ -15,8 +15,8 @@ namespace Application.DTOs.Fines
         public string AdminName { get; set; } = string.Empty;
         public int Amount { get; set; }
         public string Comment { get; set; } = string.Empty;
-        public Guid GameId { get; set; }
-        public string GameName { get; set; } = string.Empty ;
+        public Guid? GameId { get; set; }
+        public string? GameName { get; set; } = string.Empty ;
         public DateTime UpdatedAt { get; set; }
     }
 }

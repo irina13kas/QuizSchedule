@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.ChangeShiftType
 {
-    public class ChangeShiftTypeCommand : IRequest<GameResponseForParticipants>
+    public class ChangeShiftTypeCommand : IRequest<GameWithParticipantsResponse>
     {
         public Guid ParticipantId { get; set; }
         public bool IsFullShift { get; set; }

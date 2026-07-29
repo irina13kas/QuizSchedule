@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.ChangeShiftType
 {
-    public class ChangeShiftTypeCommandHandler : IRequestHandler<ChangeShiftTypeCommand, GameResponseForParticipants>
+    public class ChangeShiftTypeCommandHandler : IRequestHandler<ChangeShiftTypeCommand,
+        GameWithParticipantsResponse>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IGameParticipantRepository _participantRepository;
@@ -34,7 +35,8 @@ namespace Application.Features.Participants.ChangeShiftType
             _mapper = mapper;
         }
 
-        public async Task<GameResponseForParticipants> Handle(ChangeShiftTypeCommand request, CancellationToken cancellationToken)
+        public async Task<GameWithParticipantsResponse> Handle(ChangeShiftTypeCommand request, 
+            CancellationToken cancellationToken)
         {
             if (_currentUserService.Role != UserRole.Admin.ToString())
                 throw new ForbiddenException("Только Админ может менять полноту смены Квизмена");
@@ -47,9 +49,9 @@ namespace Application.Features.Participants.ChangeShiftType
                 _participantRepository.Update(participant);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
                 var updateGame = await _gameRepository.GetByIdWithParticipantsAsync(participant.GameId, cancellationToken);
-                return _mapper.Map<GameResponseForParticipants>(updateGame);
+                return _mapper.Map<GameWithParticipantsResponse>(updateGame);
             }
-            return _mapper.Map<GameResponseForParticipants>(participant.Game);
+            return _mapper.Map<GameWithParticipantsResponse>(participant.Game);
         }
     }
 }

@@ -11,8 +11,8 @@ namespace Application.DTOs.Schedule
     public class DailyScheduleResponse
     {
         public DateTime Date { get; set; }
-        public string DayOfWeek { get; set; }
-        public List<GameWithParticipantsResponse> Games { get; set; }
+        public string DayOfWeek { get; set; } = string.Empty;
+        public List<GameWithParticipantsResponse> Games { get; set; } = new();
 
     }
 }

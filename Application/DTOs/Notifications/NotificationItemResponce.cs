@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Notifications
 {
-    public class NotificationDTO
+    public class NotificationItemResponce
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public Guid SenderId { get; set; }
         public string SenderName { get; set; } = string.Empty;
         public string Message { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;

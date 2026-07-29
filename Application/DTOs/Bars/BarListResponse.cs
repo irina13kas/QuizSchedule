@@ -8,6 +8,6 @@ namespace Application.DTOs.Bars
 {
     public class BarListResponse
     {
-        public List<BarResponse> Bars { get; set; }
+        public List<BarResponse> Bars { get; set; } = new();
     }
 }

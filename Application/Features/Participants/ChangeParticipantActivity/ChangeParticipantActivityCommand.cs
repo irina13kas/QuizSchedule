@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.ChangeParticipantActivity
 {
-    public class ChangeParticipantActivityCommand : IRequest<GameResponseForParticipants>
+    public class ChangeParticipantActivityCommand : IRequest<GameWithParticipantsResponse>
     {
         public Guid ParticipantId { get; set; }
         public bool IsActive { get; set; }

@@ -28,19 +28,55 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<List<DateOnly>> GetAvailableDatesForQuizmenAsync(
+        public async Task<List<Smart>> GetAvailableDatesForQuizmanByStatusAsync(
             Guid quizemanId,
-            DateTime dateFrom,
-            DateTime dateTo,
+            SmartStatus? status,
+            DateTime? dateFrom,
+            DateTime? dateTo,
             CancellationToken cancellationToken = default)
         {
-            return await _context.Smarts
-                .Where(s => s.QuizmanId == quizemanId 
-                && s.Date >= DateOnly.FromDateTime(dateFrom)
-                && s.Date <= DateOnly.FromDateTime(dateTo)
-                && s.Status == SmartStatus.Available)
-                .Select(s => s.Date)
-                .OrderBy(s => s.Day)
+            var query = _context.Smarts
+                 .Where(s => s.QuizmanId == quizemanId);
+
+            if (dateFrom.HasValue)
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(dateFrom.Value));
+            else
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(DateTime.Now.Date));
+
+            if (dateTo.HasValue)
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(dateTo.Value));
+            else
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(DateTime.Now.Date.AddDays(10)));
+
+            if (status.HasValue)
+                query = query.Where(s => s.Status == status);
+
+            return await query
+                .OrderBy(s => s.Date)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<Smart>> GetSmartDatesForQuizmanAsync(
+            Guid quizemanId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default)
+        {
+            var query = _context.Smarts
+                 .Where(s => s.QuizmanId == quizemanId);
+
+            if (dateFrom.HasValue)
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(dateFrom.Value));
+            else
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(DateTime.Now.Date));
+
+            if (dateTo.HasValue)
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(dateTo.Value));
+            else
+                query = query.Where(s => s.Date >= DateOnly.FromDateTime(DateTime.Now.Date.AddDays(10)));
+
+            return await query
+                .OrderBy(s => s.Date)
                 .ToListAsync(cancellationToken);
         }
 

@@ -8,6 +8,6 @@ namespace Application.DTOs.Djs
 {
     public class DjsListResponse
     {
-        public List<DjResponse> Djs { get; set; }
+        public List<DjResponse> Djs { get; set; } = new();
     }
 }

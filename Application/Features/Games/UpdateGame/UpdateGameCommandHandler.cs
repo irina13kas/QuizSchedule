@@ -57,35 +57,35 @@ namespace Application.Features.Games.UpdateGame
             if (existGame != null)
                 throw new ExistInDBException("Игра с таким именем уже присутствует в БД");
 
-            if (request.BarId != null)
+            if (request.BarId != Guid.Empty)
             {
                 var bar = await _barRepository.GetByIdAsync(request.BarId, cancellationToken);
                 if (bar == null)
                     throw new NotFoundException("Бар не существует");
             }
 
-            if (request.MasterId != null)
+            if (request.MasterId != Guid.Empty)
             {
                 var master = await _masterRepository.GetByIdAsync(request.MasterId, cancellationToken);
                 if (master == null)
                     throw new NotFoundException("Ведущий не существует");
             }
 
-            if (request.DjId != null)
+            if (request.DjId != Guid.Empty)
             {
                 var dj = await _djRepository.GetByIdAsync(request.DjId, cancellationToken);
                 if (dj == null)
                     throw new NotFoundException("Dj не существует");
             }
 
-            if (request.PhotographerId != null)
+            if (request.PhotographerId != Guid.Empty)
             {
                 var photographer = await _photographerRepository.GetByIdAsync(request.PhotographerId, cancellationToken);
                 if (photographer == null)
                     throw new NotFoundException("Фотограф не существует");
             }
 
-            if (request.ResponsibleAdminId != null)
+            if (request.ResponsibleAdminId != Guid.Empty)
             {
                 var admin = await _adminRepository.GetByIdAsync(request.ResponsibleAdminId, cancellationToken);
                 if (admin == null)

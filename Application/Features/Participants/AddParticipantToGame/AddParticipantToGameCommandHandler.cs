@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.AddParticipantToGame
 {
-    public class AddParticipantToGameCommandHandler: IRequestHandler<AddParticipantToGameCommand, GameResponseForParticipants>
+    public class AddParticipantToGameCommandHandler: IRequestHandler<AddParticipantToGameCommand,
+        GameWithParticipantsResponse>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
@@ -38,7 +39,8 @@ namespace Application.Features.Participants.AddParticipantToGame
 
         }
 
-        public async Task<GameResponseForParticipants> Handle(AddParticipantToGameCommand request, CancellationToken cancellationToken)
+        public async Task<GameWithParticipantsResponse> Handle(AddParticipantToGameCommand request,
+            CancellationToken cancellationToken)
         {
             if (_currentUserService.Role != UserRole.Admin.ToString())
                 throw new ForbiddenException("Добавлять Квизмена на Игру может только Админ!");
@@ -78,7 +80,7 @@ namespace Application.Features.Participants.AddParticipantToGame
 
             var updateGame = await _gameRepository.GetByIdWithParticipantsAsync(game.Id, cancellationToken);
 
-           return _mapper.Map<GameResponseForParticipants>(updateGame);
+           return _mapper.Map<GameWithParticipantsResponse>(updateGame);
         }
     }
 }

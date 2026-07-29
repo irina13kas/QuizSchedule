@@ -2,6 +2,7 @@
 using Application.Common.Interfaces;
 using Application.DTOs.Schedule;
 using AutoMapper;
+using Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -36,14 +37,25 @@ namespace Application.Features.Schedule.GetWeekSchedule
                 request.DateTo,
                 cancellationToken);
 
-            if(gameList == null)
+            if (gameList == null)
                 throw new NotFoundException("Игры на эту неделю не существуют");
+
+            List<DailySchedule> dailySchedules = new();
+
+            foreach(var game in gameList)
+            {
+                var day = dailySchedules.FirstOrDefault(d => d.Date == game.GameStartTime.Date);
+                if (day != null)
+                    day.AddGame(game);
+                else
+                    dailySchedules.Add(new DailySchedule(game.GameStartTime, game));
+            }
 
             return new ScheduleMatrixResponse
             {
                 DateFrom = request.DateFrom,
                 DateTo = request.DateTo,
-                ScheduleForWeek = _mapper.Map<List<DailyScheduleResponse>>(gameList)
+                ScheduleForWeek = _mapper.Map<List<DailyScheduleResponse>>(dailySchedules)
             };
         }
     }

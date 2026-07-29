@@ -8,6 +8,6 @@ namespace Application.DTOs.Masters
 {
     public class MastersListResponse
     {
-        public List<MasterResponse> Masters { get; set; }
+        public List<MasterResponse> Masters { get; set; } = new();
     }
 }

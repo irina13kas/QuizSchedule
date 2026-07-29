@@ -8,6 +8,6 @@ namespace Application.DTOs.Quizman
 {
     public class QuizmenListResponse
     {
-        public List<QuizmanResponse> Quizmen { get; set; }
+        public List<QuizmanResponse> Quizmen { get; set; } = new();
     }
 }

@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.DeleteParticipantsFromGame
 {
-    public class DeleteParticipantFromGameCommandHandler : IRequestHandler<DeleteParticipantFromGameCommand, GameResponseForParticipants>
+    public class DeleteParticipantFromGameCommandHandler : IRequestHandler<DeleteParticipantFromGameCommand,
+        GameWithParticipantsResponse>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
@@ -34,7 +35,7 @@ namespace Application.Features.Participants.DeleteParticipantsFromGame
             _mapper = mapper;
         }
 
-        public async Task<GameResponseForParticipants> Handle(DeleteParticipantFromGameCommand request, CancellationToken cancellationToken)
+        public async Task<GameWithParticipantsResponse> Handle(DeleteParticipantFromGameCommand request, CancellationToken cancellationToken)
         {
             if (_currentUserService.Role != UserRole.Admin.ToString())
                 throw new ForbiddenException("Только Админ может удалять участников игры");
@@ -57,7 +58,7 @@ namespace Application.Features.Participants.DeleteParticipantsFromGame
             var updateGame = await _gameRepository.GetByIdWithParticipantsAsync(participant.GameId,
                 cancellationToken);
 
-            return _mapper.Map<GameResponseForParticipants>(updateGame);
+            return _mapper.Map<GameWithParticipantsResponse>(updateGame);
         }
     }
 }

@@ -4,7 +4,7 @@ using Application.Features.PointsHistory.DeletePoints;
 using Application.Features.SmartSchedule.AddToSmart;
 using Application.Features.SmartSchedule.DeleteFromSmart;
 using Application.Features.SmartSchedule.GetAvailableQuizmen;
-using Application.Features.SmartSchedule.GetQuizmanAvability;
+using Application.Features.SmartSchedule.GetQuizmanSmart;
 using Application.Features.SmartSchedule.UpdateSmart;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -52,15 +52,40 @@ namespace Api.Controllers
             return await _mediator.Send(command);
         }
 
-        [HttpGet("get-quizman-availability-for-days")]
+        //[HttpGet("get-quizman-availability-for-days")]
+        //[Authorize(Roles = "Admin")]
+        //[ProducesResponseType(typeof(AvailableDaysForQuizmanResponse), StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //public async Task<AvailableDaysForQuizmanResponse> GetQuizmanAvailability(
+        //    [FromBody] GetQuizmanAvailabilityCommand command)
+        //{
+        //    return await _mediator.Send(command);
+        //}
+
+        [HttpGet("{quizmanId}/get-quizman-smart")]
         [Authorize(Roles = "Admin")]
-        [ProducesResponseType(typeof(AvailableDaysForQuizmanResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SmartDaysForQuizmanResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<AvailableDaysForQuizmanResponse> GetQuizmanAvailability(
-            [FromBody] GetQuizmanAvailabilityCommand command)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<SmartDaysForQuizmanResponse> GetQuizmanSmart(Guid quizmanId,
+            [FromBody] GetQuizmanSmartCommand command)
+        {
+            command.QuizmanId = quizmanId;
+            return await _mediator.Send(command);
+        }
+
+        [HttpGet("{quizmanId}/get-my-smart")]
+        [Authorize(Roles = "Quizman")]
+        [ProducesResponseType(typeof(SmartDaysForQuizmanResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<SmartDaysForQuizmanResponse> GetMySmart(
+            [FromBody] GetQuizmanSmartCommand command)
         {
             return await _mediator.Send(command);
         }
+
 
         [HttpPut("{smartId}")]
         [Authorize(Roles = "Quizman")]

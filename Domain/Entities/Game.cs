@@ -18,12 +18,12 @@ namespace Domain.Entities
         public Guid? DjId { get; private set; }
         public Guid? PhotographerId { get; private set; }
 
-        public virtual Admin Admin { get; private set; } = null!;
-        public virtual Bar Bar { get; private set; } = null!;
+        public virtual Admin? ResponsibleAdmin { get; private set; }
+        public virtual Bar? Bar { get; private set; }
         public virtual Admin AdminCreator { get; private set; } = null!;
-        public virtual Master Master { get; private set; } = null!;
-        public virtual Dj Dj { get; private set; } = null!;
-        public virtual Photographer Photographer { get; private set; } = null!;
+        public virtual Master? Master { get; private set; }
+        public virtual Dj? Dj { get; private set; }
+        public virtual Photographer? Photographer { get; private set; }
 
         public virtual ICollection<GameParticipant> Participants { get; private set; }
 

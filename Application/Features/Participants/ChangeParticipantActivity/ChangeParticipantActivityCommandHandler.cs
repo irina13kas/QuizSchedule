@@ -14,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.ChangeParticipantActivity
 {
-    public class ChangeParticipantActivityCommandHandler : IRequestHandler<ChangeParticipantActivityCommand, GameResponseForParticipants>
+    public class ChangeParticipantActivityCommandHandler : IRequestHandler<ChangeParticipantActivityCommand,
+        GameWithParticipantsResponse>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,7 +36,8 @@ namespace Application.Features.Participants.ChangeParticipantActivity
             _mapper = mapper;
         }
 
-        public async Task<GameResponseForParticipants> Handle(ChangeParticipantActivityCommand request, CancellationToken cancellationToken)
+        public async Task<GameWithParticipantsResponse> Handle(ChangeParticipantActivityCommand request, 
+            CancellationToken cancellationToken)
         {
             if (_currentUserService.Role != UserRole.Admin.ToString())
                 throw new ForbiddenException("Только Админ может менять активность Квизмена");
@@ -49,11 +51,11 @@ namespace Application.Features.Participants.ChangeParticipantActivity
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
                 var updateGame = await _gameRepository.GetByIdWithParticipantsAsync(participant.GameId, cancellationToken);
-                return _mapper.Map<GameResponseForParticipants>(updateGame);
+                return _mapper.Map<GameWithParticipantsResponse>(updateGame);
             }
             else
             {
-                return _mapper.Map<GameResponseForParticipants>(participant.Game);
+                return _mapper.Map<GameWithParticipantsResponse>(participant.Game);
             }
             
         }

@@ -52,7 +52,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(g => g.ResponsibleAdminId);
             builder.HasIndex(g => g.PhotographerId);
 
-            builder.HasOne(g => g.Admin)
+            builder.HasOne(g => g.ResponsibleAdmin)
                 .WithMany()
                 .HasForeignKey(g => g.ResponsibleAdminId)
                 .OnDelete(DeleteBehavior.Restrict);

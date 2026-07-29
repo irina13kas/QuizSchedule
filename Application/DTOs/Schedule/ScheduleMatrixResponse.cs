@@ -10,6 +10,6 @@ namespace Application.DTOs.Schedule
     {
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
-        public List<DailyScheduleResponse> ScheduleForWeek { get; set; }
+        public List<DailyScheduleResponse> ScheduleForWeek { get; set; } = new();
     }
 }

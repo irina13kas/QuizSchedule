@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.AddParticipantToGame
 {
-    public class AddParticipantToGameCommand : IRequest<GameResponseForParticipants>
+    public class AddParticipantToGameCommand : IRequest<GameWithParticipantsResponse>
     {
         public Guid QuizmanId { get; set; }
         public Guid GameId { get; set; }

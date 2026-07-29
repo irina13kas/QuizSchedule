@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,17 @@ namespace Application.Common.Interfaces
         Task<List<Smart>> GetAllAvailableQuizmenAsync(
             DateTime date, 
             CancellationToken cancellationToken = default);
-        Task<List<DateOnly>> GetAvailableDatesForQuizmenAsync(
+        Task<List<Smart>> GetSmartDatesForQuizmanByStatusAsync(
             Guid quizemanId,
-            DateTime dateFrom, 
-            DateTime dateTo,
+            SmartStatus? status,
+            DateTime? dateFrom, 
+            DateTime? dateTo,
+            CancellationToken cancellationToken = default);
+
+        Task<List<Smart>> GetSmartDatesForQuizmanAsync(
+            Guid quizemanId,
+            DateTime? dateFrom,
+            DateTime? dateTo,
             CancellationToken cancellationToken = default);
 
         Task<bool> IsQuizemanAvailableOnThisDate(

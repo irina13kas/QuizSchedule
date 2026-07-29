@@ -10,6 +10,6 @@ namespace Application.DTOs.Smart
     public class AvailableQuizmenForDateResponse
     {
         public DateOnly Date { get; set; }
-        public List<QuizmanResponse> AvailableQuizmen { get; set; }
+        public List<QuizmanResponse> AvailableQuizmen { get; set; } = new();
     }
 }

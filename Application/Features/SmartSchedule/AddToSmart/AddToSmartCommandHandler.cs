@@ -58,8 +58,8 @@ namespace Application.Features.SmartSchedule.AddToSmart
                 Comment = quizmanDaySmart.Comment,
                 Date = quizmanDaySmart.Date,
                 Status = quizmanDaySmart.Status.ToString(),
-                QuizemanId = quizman.Id,
-                QuizemanName = quizman.User.Name
+                QuizmanId = quizman.Id,
+                QuizmanName = quizman.User.Name
             };
         }
     }

@@ -8,6 +8,6 @@ namespace Application.DTOs.Photographers
 {
     public class PhotographersListResponse
     {
-        public List<PhotographerResponse> Photographers { get; set; }
+        public List<PhotographerResponse> Photographers { get; set; } = new();
     }
 }

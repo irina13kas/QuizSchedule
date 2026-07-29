@@ -34,9 +34,9 @@ namespace Application.Features.Notifications.GetUnreadedCount
 
             var userId = _currentUserService.UserId;
 
-            //var user = await _userRepository.GetByIdAsync(userId.Value, cancellationToken);
-            //if(user == null || user.IsDeleted)
-            //    throw new NotFoundException("Пользователь не найден");
+            var user = await _userRepository.GetByIdAsync(userId.Value, cancellationToken);
+            if (user == null || user.IsDeleted)
+                throw new NotFoundException("Пользователь не найден");
 
             var unreadCount = await _notificationRepository.CountNotificationsAsync(userId.Value,
                 request.FromDate,

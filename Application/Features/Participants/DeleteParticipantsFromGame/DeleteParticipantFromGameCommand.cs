@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Participants.DeleteParticipantsFromGame
 {
-    public class DeleteParticipantFromGameCommand : IRequest<GameResponseForParticipants>
+    public class DeleteParticipantFromGameCommand : IRequest<GameWithParticipantsResponse>
     {
         public Guid ParticipantId { get; set; }
     }

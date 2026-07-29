@@ -11,17 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.SmartSchedule.GetQuizmanAvability
+namespace Application.Features.SmartSchedule.GetQuizmanSmart
 {
-    public class GetQuizmanAvailabilityCommandHandler : IRequestHandler<GetQuizmanAvailabilityCommand,
-        AvailableDaysForQuizmanResponse>
+    public class GetQuizmanSmartCommandHandler : IRequestHandler<GetQuizmanSmartCommand,
+        SmartDaysForQuizmanResponse>
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly ISmartRepository _scheduleRepository;
         private readonly IQuizmanRepository _quizmanRepository;
         private readonly IMapper _mapper;
 
-        public GetQuizmanAvailabilityCommandHandler(ICurrentUserService currentUserService, 
+        public GetQuizmanSmartCommandHandler(ICurrentUserService currentUserService, 
             ISmartRepository scheduleRepository, 
             IQuizmanRepository quizmanRepository,
             IMapper mapper)
@@ -32,26 +32,34 @@ namespace Application.Features.SmartSchedule.GetQuizmanAvability
             _mapper = mapper;
         }
 
-        public async Task<AvailableDaysForQuizmanResponse> Handle(GetQuizmanAvailabilityCommand request,
+        public async Task<SmartDaysForQuizmanResponse> Handle(GetQuizmanSmartCommand request,
             CancellationToken cancellationToken)
         {
             if (_currentUserService.Role != UserRole.Admin.ToString())
-                throw new ForbiddenException("Только Админ может смотреть доступных квизменов");
+                throw new ForbiddenException("Только Админ может смотреть доступные дни для квизмена");
 
-            var quizmanAvailableDays = await _scheduleRepository.GetAvailableDatesForQuizmenAsync(
+            var quizman = await _quizmanRepository.GetByIdAsync(request.QuizmanId,
+                cancellationToken);
+            if (quizman != null)
+                throw new NotFoundException("Квизмен не найден");
+            SmartStatus? status = null;
+            if (Enum.TryParse<SmartStatus>(request.Status, true, out SmartStatus st))
+            {
+                status = st;
+            }
+ 
+            var quizmanAvailableDays = await _scheduleRepository.GetSmartDatesForQuizmanByStatusAsync(
                 request.QuizmanId,
+                status,
                 request.DateFrom,
                 request.DateTo,
                 cancellationToken);
 
-            var quizman = await _quizmanRepository.GetByIdAsync(request.QuizmanId,
-                cancellationToken);
-
-            return new AvailableDaysForQuizmanResponse
+            return new SmartDaysForQuizmanResponse
             {
                 QuizmanId = request.QuizmanId,
                 QuizemanName = quizman.User.Name,
-                AvailableDaysForQuizman = _mapper.Map<List<SmartItemResponse>>(quizmanAvailableDays)
+                SmartDaysForQuizman = _mapper.Map<List<SmartItemResponse>>(quizmanAvailableDays)
             };
         }
     }

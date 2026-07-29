@@ -66,7 +66,7 @@ namespace Application.Features.Notifications.GetNotificationsQuery
 
                 TotalCount = totalCount,
                 UnreadCount = unreadNotifications,
-                NotificationDTOs = _mapper.Map<List<NotificationDTO>>(notifications),
+                Notifications = _mapper.Map<List<NotificationItemResponce>>(notifications),
                 Page = request.Page,
                 PageSize = request.PageSize
             };
