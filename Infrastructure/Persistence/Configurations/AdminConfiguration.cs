@@ -26,7 +26,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(a => a.User)
                 .WithOne(u => u.Admin)
-                .HasForeignKey<Quizman>(a => a.UserId)
+                .HasForeignKey<Admin>(a => a.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

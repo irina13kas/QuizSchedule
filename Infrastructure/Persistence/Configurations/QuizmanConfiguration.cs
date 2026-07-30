@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasAlternateKey(q => q.UserId);
 
             builder.Property(q => q.Points)
-                .HasDefaultValue(0)
+                .HasDefaultValue(0m)
                 .HasPrecision(10)
                 .IsRequired();
 
@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.Property(q => q.WorkShift)
-                .HasDefaultValue(3)
+                .HasDefaultValue(3m)
                 .HasPrecision(10)
                 .IsRequired();
 

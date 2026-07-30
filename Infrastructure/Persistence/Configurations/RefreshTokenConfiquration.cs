@@ -23,17 +23,12 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(rt => rt.ExpiresAt)
                 .IsRequired();
 
-            builder.Property(rt => rt.IsRevoked)
-                .IsRequired();
-
-            builder.Property(rt => rt.IsActive)
-                .IsRequired();
-
-            builder.Property(rt => rt.IsExpired)
-                .IsRequired();
-
             builder.Property(q => q.CreatedAt)
                 .IsRequired();
+
+            builder.Ignore(x => x.IsActive);
+            builder.Ignore(x => x.IsExpired);
+            builder.Ignore(x => x.IsRevoked);
 
             builder.HasIndex(rt => rt.Token)
                 .IsUnique();

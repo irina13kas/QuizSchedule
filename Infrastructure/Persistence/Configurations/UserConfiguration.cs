@@ -53,7 +53,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasIndex(u => u.VkUrl)
                 .IsUnique()
-                .HasFilter("[VkUrl] IS NOT NULL");
+                .HasFilter(@"""VkUrl"" IS NOT NULL");
 
             builder.HasQueryFilter(u => !u.IsDeleted);
         }

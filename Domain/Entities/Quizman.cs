@@ -11,9 +11,9 @@ namespace Domain.Entities
     public class Quizman :  BaseEntity
     {
         public Guid UserId { get; private set; }
-        public decimal Points { get; private set; } = 0;
+        public int Points { get; private set; } = 0;
         public int Fines { get; private set; } = 0;
-        public decimal WorkShift { get; private set; } = 3;
+        public int WorkShift { get; private set; } = 3;
         
         public virtual User User { get; private set; } = null!;
 

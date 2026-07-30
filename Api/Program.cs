@@ -3,8 +3,10 @@ using Api.Services;
 using Application.Common.Interfaces;
 using Application.Mappings;
 using Infrastructure;
+using Infrastructure.Persistence;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using System.Security.Claims;
@@ -58,9 +60,19 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+
+
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await context.Database.EnsureCreatedAsync();
+
+    await context.Database.MigrateAsync();
+}
+
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
