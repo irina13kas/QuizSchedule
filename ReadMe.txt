@@ -1,5 +1,18 @@
-��� ������ �������� 
-	dotnet ef migrations add InitialCreate --project "./Infrastructure/Infrastructure.csproj" --startup-project "./Api/Api.csproj"
-
-�������� ��������
-	dotnet ef database update --project "./Infrastructure/Infrastructure.csproj" --startup-project "./Api/Api.csproj"
+QuizSchedule — это система автоматизации работы организаторов квиз-игр. Существует две основные роли - Администратор и Квизмен. Администратор может управлять расписанием игр, назначать старший состав (DJ, ведущий, фотограф) и распределять Квизменов по играм с учётом их доступности и ролей. Квизмены могут отмечать даты, когда они свободны - составлять smart, подавать заявки на замены, если их не поставили на смены, а также отслеживать свои баллы, штрафы и отработанные смены. Система также включает push-уведомления - при отмене игры, JWT-аутентификацию с Refresh Tokens и доску расписания с фильтрами для удобного планирования. Приложение использует Clean Architecture - разделение на Domain / Application / Infrastructure / Api. Все данные получаются из репозиториев. Выполнено разделение команд и запросов (CQRS). В качестве БД используется PostgreSQL. В дальнейшем планируется реализовать интерфейс пользователя - мобильное приложение для Квизмена и Web-версию для Администраторов.
+Стек технологий
+	Backend
+ASP.NET Core Web API
+.NET 8
+Entity Framework Core
+PostgreSQL — основная база данных (через Npgsql.EntityFrameworkCore.PostgreSQL)
+MediatR — реализация CQRS (Command/Query разделение)
+AutoMapper
+FluentValidation
+BCrypt — хэширование паролей
+JWT Bearer — аутентификация (Access + Refresh Tokens)
+	Инфраструктура
+Swagger
+User Secrets
+Hangfire (планируется) — фоновые задачи (завершение игр, очистка токенов)
+	Фронтенд (планируется)
+React Native / Expo — мобильное приложение
