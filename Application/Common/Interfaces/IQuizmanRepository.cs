@@ -19,5 +19,9 @@ namespace Application.Common.Interfaces
             CancellationToken cancellationToken = default);
 
         Quizman Restore(Quizman quizman);
+
+        Task<Quizman?> GetByUserIdIgnoreFiltersAsync(
+            Guid userId, 
+            CancellationToken cancellationToken);
     }
 }

@@ -21,9 +21,19 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _context.Admins
                 .Include(x => x.User)
-                .FirstOrDefaultAsync(x => x.UserId == userId 
-                && !x.User.IsDeleted, 
+                .FirstOrDefaultAsync(x => x.UserId == userId, 
                 cancellationToken);
+        }
+
+        public async Task<Admin?> GetByUserIdIgnoreFiltersAsync(
+            Guid userId, 
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.Admins
+               .Include(x => x.User)
+               .IgnoreQueryFilters()
+               .FirstOrDefaultAsync(x => x.UserId == userId,
+               cancellationToken);
         }
     }
 }

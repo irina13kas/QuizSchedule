@@ -61,14 +61,16 @@ namespace Application.Features.Auth.Register
 
             if (request.Role == UserRole.Quizman.ToString())
             {
-                var quizman = await _quizmanRepository.GetByUserIdAsync(user.Id, cancellationToken);
+                var quizman = await _quizmanRepository.GetByUserIdIgnoreFiltersAsync(user.Id, cancellationToken);
                 if (quizman != null)
                     throw new ExistInDBException("Квизмен с таким UserId уже существует");
                 await _quizmanRepository.AddAsync(new Quizman(user.Id));
             }
             else if (request.Role == UserRole.Admin.ToString())
             {
-                var admin = await _adminRepository.GetByUserIdAsync(user.Id, cancellationToken);
+                var admin = await _adminRepository
+                    .GetByUserIdIgnoreFiltersAsync(user.Id, cancellationToken);
+
                 if (admin != null)
                     throw new ExistInDBException("Админ с таким UserId уже существует");
                 await _adminRepository.AddAsync(new Admin(user.Id));

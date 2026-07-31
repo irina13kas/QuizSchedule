@@ -19,8 +19,18 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await _context.Quizmen
                 .Include(q => q.User)
-                .FirstOrDefaultAsync(q => q.UserId == userId
-                && !q.User.IsDeleted,
+                .FirstOrDefaultAsync(q => q.UserId == userId,
+                cancellationToken);
+        }
+
+        public async Task<Quizman?> GetByUserIdIgnoreFiltersAsync(
+            Guid userId,
+            CancellationToken cancellationToken)
+        {
+            return await _context.Quizmen
+                .Include(q => q.User)
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(q => q.UserId == userId,
                 cancellationToken);
         }
 
