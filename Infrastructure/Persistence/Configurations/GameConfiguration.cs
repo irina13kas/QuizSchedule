@@ -29,7 +29,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(g => g.Partner)
                 .HasMaxLength(100);
 
-            builder.Property(g => g.CreateByAdminId)
+            builder.Property(g => g.AdminCreatorId)
                 .IsRequired();
 
             builder.Property(g => g.GameStartTime)
@@ -53,8 +53,13 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(g => g.PhotographerId);
 
             builder.HasOne(g => g.ResponsibleAdmin)
-                .WithMany()
+                .WithMany(a => a.WorkedGames)
                 .HasForeignKey(g => g.ResponsibleAdminId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(g => g.AdminCreator)
+                .WithMany(a => a.CreatedGames)
+                .HasForeignKey(g => g.AdminCreatorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(g => g.Bar)
@@ -76,11 +81,6 @@ namespace Infrastructure.Persistence.Configurations
                 .WithMany()
                 .HasForeignKey(g => g.PhotographerId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(g => g.Participants)
-                .WithOne(p => p.Game)
-                .HasForeignKey(p => p.GameId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             builder.ToTable(t => t.HasCheckConstraint("CK_StartGameTime_Later_Now",
                 @"""GameStartTime"" >= CURRENT_TIMESTAMP"));

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260730063718_InitialCreate")]
+    [Migration("20260803103844_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -164,9 +164,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid?>("BarId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CreateByAdminId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -257,9 +254,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("QuizmanId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("QuizmanId1")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -271,8 +265,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("GameId");
 
                     b.HasIndex("QuizmanId");
-
-                    b.HasIndex("QuizmanId1");
 
                     b.HasIndex("GameId", "QuizmanId")
                         .IsUnique();
@@ -442,15 +434,10 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Token")
                         .IsUnique();
-
-                    b.HasIndex("UserId1");
 
                     b.HasIndex("UserId", "IsActive");
 
@@ -491,7 +478,7 @@ namespace Infrastructure.Migrations
 
                     b.HasAlternateKey("UserId");
 
-                    b.ToTable("quizmans", (string)null);
+                    b.ToTable("quizmen", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.RefreshToken", b =>
@@ -546,9 +533,6 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("AdminId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Comment")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
@@ -565,9 +549,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("QuizemanId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("QuizmanId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -579,13 +560,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AdminId");
-
                     b.HasIndex("Date");
 
                     b.HasIndex("QuizemanId");
-
-                    b.HasIndex("QuizmanId");
 
                     b.HasIndex("TakenAdminId");
 
@@ -734,7 +711,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Admin", "AdminCreator")
                         .WithMany("CreatedGames")
                         .HasForeignKey("AdminCreatorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Bar", "Bar")
@@ -758,7 +735,7 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Entities.Admin", "ResponsibleAdmin")
-                        .WithMany()
+                        .WithMany("WorkedGames")
                         .HasForeignKey("ResponsibleAdminId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -784,14 +761,10 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Quizman", "Quizman")
-                        .WithMany()
+                        .WithMany("Games")
                         .HasForeignKey("QuizmanId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Quizman", null)
-                        .WithMany("Games")
-                        .HasForeignKey("QuizmanId1");
 
                     b.Navigation("Game");
 
@@ -846,14 +819,10 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.PushToken", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("PushTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithMany("PushTokens")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });
@@ -861,7 +830,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Quizman", b =>
                 {
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithOne("Quizeman")
+                        .WithOne("Quizman")
                         .HasForeignKey("Domain.Entities.Quizman", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -882,22 +851,14 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Replacement", b =>
                 {
-                    b.HasOne("Domain.Entities.Admin", null)
-                        .WithMany("TakenReplacements")
-                        .HasForeignKey("AdminId");
-
                     b.HasOne("Domain.Entities.Quizman", "Quizeman")
-                        .WithMany()
+                        .WithMany("Replacements")
                         .HasForeignKey("QuizemanId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Quizman", null)
-                        .WithMany("Replacements")
-                        .HasForeignKey("QuizmanId");
-
                     b.HasOne("Domain.Entities.Admin", "TakenAdmin")
-                        .WithMany()
+                        .WithMany("TakenReplacements")
                         .HasForeignKey("TakenAdminId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -926,6 +887,8 @@ namespace Infrastructure.Migrations
                     b.Navigation("GivenPoints");
 
                     b.Navigation("TakenReplacements");
+
+                    b.Navigation("WorkedGames");
                 });
 
             modelBuilder.Entity("Domain.Entities.Game", b =>
@@ -954,7 +917,7 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("PushTokens");
 
-                    b.Navigation("Quizeman");
+                    b.Navigation("Quizman");
                 });
 #pragma warning restore 612, 618
         }

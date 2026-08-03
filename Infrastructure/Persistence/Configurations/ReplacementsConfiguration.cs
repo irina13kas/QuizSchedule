@@ -43,12 +43,12 @@ namespace Infrastructure.Persistence.Configurations
             });
 
             builder.HasOne(r => r.Quizeman)
-                .WithMany()
+                .WithMany(q => q.Replacements)
                 .HasForeignKey(r => r.QuizemanId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(r => r.TakenAdmin)
-                .WithMany()
+                .WithMany(a => a.TakenReplacements)
                 .HasForeignKey(r => r.TakenAdminId)
                 .OnDelete(DeleteBehavior.Restrict);
 

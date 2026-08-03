@@ -2,8 +2,10 @@ using Api.Middleware;
 using Api.Services;
 using Application.Common.Interfaces;
 using Application.Mappings;
+using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.SeedData;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -60,8 +62,6 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-
-
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -70,6 +70,10 @@ using (var scope = app.Services.CreateScope())
     await context.Database.EnsureCreatedAsync();
 
     await context.Database.MigrateAsync();
+
+    var passwordHasher = app.Services.GetRequiredService<IPasswordHasher>();
+
+    await DatabaseSeeder.SeedAsync(context, passwordHasher);
 }
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();

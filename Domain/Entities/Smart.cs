@@ -19,7 +19,7 @@ namespace Domain.Entities
 
         protected Smart() { }
 
-        public Smart(DateOnly date, SmartStatus status, Guid quizemanId, string comment)
+        public Smart(DateOnly date, SmartStatus status, Guid quizemanId, string? comment)
         {
             if (quizemanId == Guid.Empty)
                 throw new ArgumentNullException("quizemanId не может быть нулевым");

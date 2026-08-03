@@ -43,7 +43,7 @@ namespace Infrastructure.Persistence.Configurations
             });
 
             builder.HasOne(pt => pt.User)
-                .WithMany()
+                .WithMany(u => u.PushTokens)
                 .HasForeignKey(pt => pt.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

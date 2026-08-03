@@ -13,7 +13,7 @@ namespace Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Quizman> builder)
         {
-            builder.ToTable("quizmans");
+            builder.ToTable("quizmen");
             builder.HasKey(q => q.Id);
             builder.HasAlternateKey(q => q.UserId);
 
@@ -36,7 +36,7 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.HasOne(q => q.User)
-                .WithOne(u => u.Quizeman)
+                .WithOne(u => u.Quizman)
                 .HasForeignKey<Quizman>(q => q.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

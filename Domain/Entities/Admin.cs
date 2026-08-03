@@ -15,6 +15,7 @@ namespace Domain.Entities
         public virtual User User { get; private set; } = null!;
 
         public ICollection<Game> CreatedGames { get; private set; }
+        public ICollection<Game> WorkedGames { get; private set; }
         public ICollection<Replacement> TakenReplacements { get; private set; }
         public ICollection<Fine> GivenFines { get; private set; }
         public ICollection<Point> GivenPoints { get; private set; }
@@ -25,6 +26,7 @@ namespace Domain.Entities
             TakenReplacements = new List<Replacement>();
             GivenFines = new List<Fine>();
             GivenPoints = new List<Point>();
+            WorkedGames = new List<Game>();
         }
 
         public Admin(Guid userId, string? daysOff = null) : this()

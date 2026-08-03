@@ -25,6 +25,9 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(b => b.CreatedAt)
                 .IsRequired();
 
+            builder.Property(gp => gp.QuizmanId)
+                .IsRequired();
+
             builder.HasIndex(gp => new
             {
                 gp.GameId,
@@ -35,7 +38,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(gp => gp.GameId);
 
             builder.HasOne(gp => gp.Quizman)
-                .WithMany()
+                .WithMany(q => q.Games)
                 .HasForeignKey(gp => gp.QuizmanId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

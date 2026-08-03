@@ -42,8 +42,8 @@ namespace Infrastructure
             services.AddScoped<IReplacementRepository, ReplacementRepository>();
             services.AddScoped<ISmartRepository, SmartRepository>();
 
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 

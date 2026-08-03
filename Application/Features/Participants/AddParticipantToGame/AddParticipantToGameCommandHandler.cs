@@ -75,10 +75,10 @@ namespace Application.Features.Participants.AddParticipantToGame
 
             var participant = new GameParticipant(
                 request.GameId, 
-                request.QuizmanId, 
-                role, 
-                request.IsFullShift, 
-                request.IsActive);
+                request.QuizmanId,
+                request.IsActive,
+                request.IsFullShift,
+                role);
 
             await _participantRepository.AddAsync(participant, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

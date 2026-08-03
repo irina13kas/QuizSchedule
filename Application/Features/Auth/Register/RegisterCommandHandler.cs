@@ -55,7 +55,7 @@ namespace Application.Features.Auth.Register
             string tempPassword = GeneratePassword();
             string passwordHash = _passwordHasher.Hash(tempPassword);
 
-            var user = new User(login, tempPassword, request.Name, role);   
+            var user = new User(login, tempPassword, request.Name, role, request.VKUrl);   
 
             await _userRepository.AddAsync(user);
 

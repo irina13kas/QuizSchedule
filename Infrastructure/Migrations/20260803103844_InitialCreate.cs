@@ -152,7 +152,6 @@ namespace Infrastructure.Migrations
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     Token = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Platform = table.Column<string>(type: "text", nullable: false, defaultValue: "Android"),
-                    UserId1 = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -164,15 +163,10 @@ namespace Infrastructure.Migrations
                         principalTable: "users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_push_tokens_users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "quizmans",
+                name: "quizmen",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -184,10 +178,10 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_quizmans", x => x.Id);
-                    table.UniqueConstraint("AK_quizmans_UserId", x => x.UserId);
+                    table.PrimaryKey("PK_quizmen", x => x.Id);
+                    table.UniqueConstraint("AK_quizmen_UserId", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_quizmans_users_UserId",
+                        name: "FK_quizmen_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "Id",
@@ -229,14 +223,13 @@ namespace Infrastructure.Migrations
                     ResponsibleAdminId = table.Column<Guid>(type: "uuid", nullable: true),
                     BarId = table.Column<Guid>(type: "uuid", nullable: true),
                     Partner = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    CreateByAdminId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AdminCreatorId = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdateDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     GameStartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     WorkStartTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     MasterId = table.Column<Guid>(type: "uuid", nullable: true),
                     DjId = table.Column<Guid>(type: "uuid", nullable: true),
                     PhotographerId = table.Column<Guid>(type: "uuid", nullable: true),
-                    AdminCreatorId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -249,7 +242,7 @@ namespace Infrastructure.Migrations
                         column: x => x.AdminCreatorId,
                         principalTable: "admins",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_games_admins_ResponsibleAdminId",
                         column: x => x.ResponsibleAdminId,
@@ -293,8 +286,6 @@ namespace Infrastructure.Migrations
                     IsFullShift = table.Column<bool>(type: "boolean", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false, defaultValue: "Wait"),
                     TakenAdminId = table.Column<Guid>(type: "uuid", nullable: true),
-                    AdminId = table.Column<Guid>(type: "uuid", nullable: true),
-                    QuizmanId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -302,27 +293,17 @@ namespace Infrastructure.Migrations
                     table.PrimaryKey("PK_replacements", x => x.Id);
                     table.CheckConstraint("CK_Date_Later_Now", "\"Date\" >= CURRENT_DATE");
                     table.ForeignKey(
-                        name: "FK_replacements_admins_AdminId",
-                        column: x => x.AdminId,
-                        principalTable: "admins",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_replacements_admins_TakenAdminId",
                         column: x => x.TakenAdminId,
                         principalTable: "admins",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_replacements_quizmans_QuizemanId",
+                        name: "FK_replacements_quizmen_QuizemanId",
                         column: x => x.QuizemanId,
-                        principalTable: "quizmans",
+                        principalTable: "quizmen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_replacements_quizmans_QuizmanId",
-                        column: x => x.QuizmanId,
-                        principalTable: "quizmans",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -340,9 +321,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_smart", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_smart_quizmans_QuizmanId",
+                        name: "FK_smart_quizmen_QuizmanId",
                         column: x => x.QuizmanId,
-                        principalTable: "quizmans",
+                        principalTable: "quizmen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -377,9 +358,9 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_fines_history_quizmans_QuizmanId",
+                        name: "FK_fines_history_quizmen_QuizmanId",
                         column: x => x.QuizmanId,
-                        principalTable: "quizmans",
+                        principalTable: "quizmen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -394,7 +375,6 @@ namespace Infrastructure.Migrations
                     Role = table.Column<string>(type: "text", nullable: false, defaultValue: "None"),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
                     FullShift = table.Column<bool>(type: "boolean", nullable: false),
-                    QuizmanId1 = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -407,16 +387,11 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_game_participants_quizmans_QuizmanId",
+                        name: "FK_game_participants_quizmen_QuizmanId",
                         column: x => x.QuizmanId,
-                        principalTable: "quizmans",
+                        principalTable: "quizmen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_game_participants_quizmans_QuizmanId1",
-                        column: x => x.QuizmanId1,
-                        principalTable: "quizmans",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -448,9 +423,9 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_points_history_quizmans_QuizmanId",
+                        name: "FK_points_history_quizmen_QuizmanId",
                         column: x => x.QuizmanId,
-                        principalTable: "quizmans",
+                        principalTable: "quizmen",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -491,11 +466,6 @@ namespace Infrastructure.Migrations
                 name: "IX_game_participants_QuizmanId",
                 table: "game_participants",
                 column: "QuizmanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_game_participants_QuizmanId1",
-                table: "game_participants",
-                column: "QuizmanId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_games_AdminCreatorId",
@@ -595,11 +565,6 @@ namespace Infrastructure.Migrations
                 columns: new[] { "UserId", "IsActive" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_push_tokens_UserId1",
-                table: "push_tokens",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_refresh_tokens_ExpiresAt",
                 table: "refresh_tokens",
                 column: "ExpiresAt");
@@ -621,11 +586,6 @@ namespace Infrastructure.Migrations
                 columns: new[] { "UserId", "RevokedAt" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_replacements_AdminId",
-                table: "replacements",
-                column: "AdminId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_replacements_Date",
                 table: "replacements",
                 column: "Date");
@@ -639,11 +599,6 @@ namespace Infrastructure.Migrations
                 name: "IX_replacements_QuizemanId_Date",
                 table: "replacements",
                 columns: new[] { "QuizemanId", "Date" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_replacements_QuizmanId",
-                table: "replacements",
-                column: "QuizmanId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_replacements_TakenAdminId",
@@ -701,7 +656,7 @@ namespace Infrastructure.Migrations
                 name: "games");
 
             migrationBuilder.DropTable(
-                name: "quizmans");
+                name: "quizmen");
 
             migrationBuilder.DropTable(
                 name: "admins");

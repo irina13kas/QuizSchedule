@@ -15,6 +15,9 @@ namespace Application.Features.Auth.Register
 
             RuleFor(x => x.Role)
                 .NotEmpty().WithMessage("Роль обязательна");
+
+            RuleFor(x => x.VKUrl)
+                .NotEmpty().WithMessage("ВК обязателен");
         }
     }
 }

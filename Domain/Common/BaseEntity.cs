@@ -12,7 +12,7 @@ namespace Domain.Common
         public DateTime CreatedAt { get; protected set; }
 
         protected BaseEntity() { 
-            CreatedAt = DateTime.Now;
+            CreatedAt = DateTime.UtcNow;
         }
 
         public void SetCreatedAt(DateTime date)

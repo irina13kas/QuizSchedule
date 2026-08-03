@@ -2,6 +2,7 @@
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Domain.Entities
         public virtual Quizman Quizman { get; private set; } = null!;
 
         protected GameParticipant() { }
-        public GameParticipant(Guid gameId, Guid quizemanId, ParticipantRole role, bool fullShift, bool isActive)
+        public GameParticipant(Guid gameId, Guid quizemanId, bool isActive, bool fullShift = true, ParticipantRole role = ParticipantRole.None)
         {
             if (gameId == Guid.Empty)
                 throw new ArgumentException("Укажите игру, куда назначаете квизмена");

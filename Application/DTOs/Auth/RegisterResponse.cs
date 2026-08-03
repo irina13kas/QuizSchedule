@@ -12,5 +12,6 @@ namespace Application.DTOs.Auth
         public string TempPassword { get; set; } = string.Empty;
         public string Login { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty ;
+        public string VKUrl { get; set; } = string.Empty;
     }
 }
