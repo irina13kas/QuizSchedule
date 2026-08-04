@@ -25,7 +25,7 @@ namespace Application.Features.Bars.GetBar
 
         public async Task<BarResponse> Handle(GetBarQuery query, CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var bar = await _barsRepository.GetByIdAsync(query.BarId, cancellationToken);

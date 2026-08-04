@@ -1,9 +1,15 @@
 ﻿using Application.Common.Interfaces;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Api.Services
 {
-    public class CurrentUserService: ICurrentUserService
+    public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -12,28 +18,52 @@ namespace Api.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public bool IsAuthenticated =>
-            _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated ?? false;
-
         public Guid? UserId
         {
             get
             {
-                var value = _httpContextAccessor.HttpContext?
-                    .User
-                    .FindFirst(ClaimTypes.NameIdentifier)?
-                    .Value;
+                var userIdClaim = _httpContextAccessor.HttpContext?
+                    .User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-                return Guid.TryParse(value, out var id)
-                    ? id
-                    : null;
+                if (string.IsNullOrEmpty(userIdClaim))
+                    return null;
+
+                return Guid.TryParse(userIdClaim, out var userId) ? userId : null;
             }
         }
 
-        public string? Login =>
-            _httpContextAccessor.HttpContext?
-            .User
-            .FindFirst(ClaimTypes.Role)?
-            .Value;
+        public string? Login => 
+            _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Name)?.Value;
+
+        public string? Role =>
+            _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role)?.Value;
+        //    public string? Role =>
+        //_httpContextAccessor.HttpContext?
+        //    .User?
+        //    .Claims
+        //    .FirstOrDefault(x => x.Type.Contains("role"))
+        //    ?.Value;
+
+        //public string? Role => "Admin";
+
+        public bool IsAuthenticated =>
+            _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+
+        public string? ClientIp
+        {
+            get
+            {
+                var httpContext = _httpContextAccessor.HttpContext;
+
+                if (httpContext == null) return null;
+
+                var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"]
+                    .FirstOrDefault();
+                if(!string.IsNullOrEmpty(forwardedFor))
+                    return forwardedFor.Split(',')[0].Trim();
+
+                return httpContext.Connection.RemoteIpAddress?.ToString();
+            }
+        }
     }
 }

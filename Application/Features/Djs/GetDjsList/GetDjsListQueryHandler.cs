@@ -33,7 +33,7 @@ namespace Application.Features.Djs.GetDjsList
         public async Task<DjsListResponse> Handle(GetDjsListQuery query,
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var djs = await _djsRepository.GetAllAsync(cancellationToken);

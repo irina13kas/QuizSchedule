@@ -1,6 +1,7 @@
 using Api.Middleware;
 using Api.Services;
 using Application.Common.Interfaces;
+using Application.Features.Auth.Login;
 using Application.Mappings;
 using Domain.Entities;
 using Infrastructure;
@@ -11,6 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
+using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 
@@ -23,6 +27,53 @@ builder.Services.AddInfstructure(builder.Configuration);
 builder.Configuration.AddUserSecrets<Program>();
 
 var configuration = builder.Configuration;
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "QuizSchedule API",
+        Version = "v1",
+        Description = "API для управления квиз-играми"
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"{token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+    //c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    //{
+    //    [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    //});
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    if (File.Exists(xmlPath))
+    {
+        c.IncludeXmlComments(xmlPath);
+    }
+});
 
 builder.Services.AddCors(options =>
 {
@@ -54,15 +105,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
             RoleClaimType = ClaimTypes.Role,
-            NameClaimType = ClaimTypes.NameIdentifier
+            NameClaimType = ClaimTypes.Name
         };
     });
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(LoginCommand).Assembly);
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
+
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    
+    
+}
+
 
 using (var scope = app.Services.CreateScope())
 {
@@ -71,22 +135,26 @@ using (var scope = app.Services.CreateScope())
 
     await context.Database.MigrateAsync();
 
-    var passwordHasher = app.Services.GetRequiredService<IPasswordHasher>();
+    //var passwordHasher = app.Services.GetRequiredService<IPasswordHasher>();
 
-    await DatabaseSeeder.SeedAsync(context, passwordHasher);
+    //await DatabaseSeeder.SeedAsync(context, passwordHasher);
 }
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+//app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI();
+//app.UseSwaggerUI(c =>
+//{
+//    c.SwaggerEndpoint("/swagger/v1/swagger.json", "QuizSchedule API v1");
+//});
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+app.MapOpenApi();
 
 app.Run();

@@ -46,7 +46,7 @@ namespace Api.Middleware
                     unauthorizedException.Message),
                 ExistInDBException existInDBException => (HttpStatusCode.Conflict, 
                     existInDBException.Message),
-                _ => (HttpStatusCode.InternalServerError, "Произошла внутренняя ошибка сервера")
+                _ => (HttpStatusCode.InternalServerError, ex.Message)
             };
 
             context.Response.ContentType = "application/json";

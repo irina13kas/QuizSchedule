@@ -31,7 +31,7 @@ namespace Application.Features.Bars.GetBarsList
         public async Task<BarListResponse> Handle(GetBarsListQuery query,
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var bars = await _barsRepository.GetAllAsync(cancellationToken);

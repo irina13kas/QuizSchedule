@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Application.Common.Interfaces
 {
-    public class ICurrentUserService
+    public interface ICurrentUserService
     {
-        public Guid? UserId { get; set; }
-        public string? Login { get; set; }
-        public string? Role { get; set; }
-        public bool IsAuthenticated { get; set;}
+        Guid? UserId { get;}
+        string? Login { get;}
+        string? Role { get;}
+        bool IsAuthenticated { get;}
 
-        public string? ClientIp { get; }
+        string? ClientIp { get; }
     }
 }

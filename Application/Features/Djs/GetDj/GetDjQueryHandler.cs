@@ -28,7 +28,7 @@ namespace Application.Features.Djs.GetDj
 
         public async Task<DjResponse> Handle(GetDjQuery query, CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var dj = await _djsRepository.GetByIdAsync(query.DjId, cancellationToken);

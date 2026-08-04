@@ -30,7 +30,7 @@ namespace Application.Features.Photographers.GetPhotographer
         public async Task<PhotographerResponse> Handle(GetPhotographerQuery query,
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var photographer = await _photosRepository.GetByIdAsync(query.PhotographerId, cancellationToken);

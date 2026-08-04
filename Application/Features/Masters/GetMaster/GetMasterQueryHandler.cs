@@ -29,7 +29,7 @@ namespace Application.Features.Masters.GetMaster
         public async Task<MasterResponse> Handle(GetMasterQuery query, 
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var master = await _mastersRepository.GetByIdAsync(query.MasterId, cancellationToken);

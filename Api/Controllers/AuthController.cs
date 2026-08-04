@@ -8,6 +8,7 @@ using Application.Features.Auth.Register;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -20,6 +21,23 @@ namespace Api.Controllers
         public AuthController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [Authorize]
+        [HttpGet("test")]
+        public IActionResult Test()
+        {
+            return Ok(new
+            {
+                IsAuthenticated = User.Identity?.IsAuthenticated,
+                Name = User.Identity?.Name,
+                Role = User.FindFirst(ClaimTypes.Role)?.Value,
+                Claims = User.Claims.Select(x => new
+                {
+                    x.Type,
+                    x.Value
+                })
+            });
         }
 
         [HttpPost("change-password")]

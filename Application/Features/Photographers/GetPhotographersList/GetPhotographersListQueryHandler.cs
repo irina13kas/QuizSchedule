@@ -34,7 +34,7 @@ namespace Application.Features.Photographers.GetPhotographersList
         public async Task<PhotographersListResponse> Handle(GetPhotographersListQuery query,
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new UnauthorizedException();
 
             var photographers = await _photosRepository.GetAllAsync(cancellationToken);

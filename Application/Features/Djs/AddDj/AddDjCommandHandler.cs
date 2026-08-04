@@ -33,7 +33,10 @@ namespace Application.Features.Djs.AddDj
         public async Task<DjResponse> Handle(AddDjCommand request, 
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.Role != UserRole.Admin.ToString())
+            Console.WriteLine("1: "+_currentUserService.UserId);
+            Console.WriteLine("2: "+_currentUserService.Role);
+
+            if (_currentUserService.Role!=UserRole.Admin.ToString())
                 throw new ForbiddenException("Только Админ может создавать новых Dj");
 
             var dj = new Dj(request.Name);

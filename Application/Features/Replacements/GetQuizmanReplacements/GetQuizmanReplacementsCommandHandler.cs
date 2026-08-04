@@ -33,7 +33,7 @@ namespace Application.Features.Replacements.GetQuizmanReplacements
         public async Task<GetReplacementsResponse> Handle(GetQuizmanReplacementsCommand request,
             CancellationToken cancellationToken)
         {
-            if (_currentUserService.IsAuthenticated)
+            if (!_currentUserService.IsAuthenticated)
                 throw new ForbiddenException("Пользователь не аутентифицирован");
 
             var userId = _currentUserService.UserId ?? default;
